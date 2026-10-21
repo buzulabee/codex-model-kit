@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: Publish this main version after checks and environment approval
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Verify
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    outputs:
+      publish: ${{ steps.release.outputs.publish }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: "24"
+          package-manager-cache: false
+      - name: Check packaging tools
+        run: git --version && zip -v
+      - name: Check release eligibility
+        id: release
+        run: node scripts/verify-release.mjs
+        env:
+          MODEL_KIT_DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+      - run: npm ci --no-audit --no-fund
+      - run: npm run check
+      - run: npm run release:package
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: release-${{ github.sha }}-${{ github.run_id }}
+          path: dist/releases/
+          if-no-files-found: error
+          retention-days: 30
+
+  publish:
+    name: Publish
+    needs: verify
+    if: needs.verify.outputs.publish == 'true' && github.ref == 'refs/heads/main' && github.ref_protected
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    environment: release
+    concurrency:
+      group: codex-model-kit-release
+      cancel-in-progress: false
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: "24"
+          package-manager-cache: false
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
+        with:
+          name: release-${{ github.sha }}-${{ github.run_id }}
+          path: dist/releases/
+      - name: Publish verified artifacts
+        run: node scripts/publish-github.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MODEL_KIT_DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}

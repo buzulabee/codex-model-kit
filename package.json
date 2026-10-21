@@ -1,0 +1,41 @@
+{
+  "name": "codex-model-kit",
+  "version": "2026.1021.1007",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "version:release": "node scripts/release-version.mjs && prettier --write package.json package-lock.json .codex-plugin/plugin.json .claude-plugin/marketplace.json src/shared/security.ts",
+    "release:package": "node scripts/release-package.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test tests/*.test.ts tests/*.test.mjs",
+    "test:package": "node scripts/release-package.mjs && node scripts/isolated-install.mjs",
+    "format": "prettier --write src tests scripts .github docs package.json tsconfig.json .codex-plugin/plugin.json .mcp.json .claude-plugin/marketplace.json README.md README.en.md INSTALL.md CI.md ACCEPTANCE.md WINDOWS.md",
+    "format:check": "prettier --check src tests scripts .github docs package.json tsconfig.json .codex-plugin/plugin.json .mcp.json .claude-plugin/marketplace.json README.md README.en.md INSTALL.md CI.md ACCEPTANCE.md WINDOWS.md",
+    "preflight": "node scripts/preflight.mjs",
+    "check": "npm run format:check && npm run typecheck && npm test && npm run preflight",
+    "pretest": "node scripts/test-setup.mjs && npm run build"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/core": "2.2.0",
+    "@modelcontextprotocol/server": "2.2.0",
+    "@modelcontextprotocol/ext-apps": "2.0.3",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "smol-toml": "1.9.0",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/client": "2.2.0",
+    "@types/node": "24.19.0",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "esbuild": "0.28.2",
+    "prettier": "3.9.9",
+    "tsx": "4.23.15",
+    "typescript": "7.0.2"
+  }
+}

@@ -1,0 +1,30 @@
+node_modules/
+dist/
+.test-artifacts/
+.DS_Store
+*.log
+.env*
+.ci-tools/
+.npm/
+
+# Local configuration and credentials (keep tests/fixtures trackable)
+/config.toml
+/auth.json
+/model-catalog*.json
+/models*.json
+*.pem
+*.key
+*.p12
+*.pfx
+*.p8
+*.jks
+*.keystore
+/.npmrc
+/.netrc
+/id_rsa
+/id_ed25519
+
+# Generated caches and release archives
+*.tsbuildinfo
+/codex-model-kit-*.tar.gz
+/codex-model-kit-*.tar.gz.sha256

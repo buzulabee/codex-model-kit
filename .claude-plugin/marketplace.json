@@ -1,0 +1,14 @@
+{
+  "name": "codex-model-kit",
+  "owner": {
+    "name": "codex-model-kit maintainers"
+  },
+  "plugins": [
+    {
+      "name": "codex-model-kit",
+      "source": "./plugins/codex-model-kit",
+      "version": "2026.1021.1007",
+      "description": "Codex 模型工具 模型目录同步与确认写入"
+    }
+  ]
+}

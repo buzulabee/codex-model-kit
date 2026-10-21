@@ -1,0 +1,21 @@
+{
+  "name": "codex-model-kit",
+  "version": "2026.1021.1007",
+  "description": "Codex 模型工具：同步中转站模型，预览并确认写入本地模型目录。",
+  "author": {
+    "name": "codex-model-kit maintainers"
+  },
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Codex 模型工具",
+    "shortDescription": "模型列表同步 · 预览、写入与恢复",
+    "longDescription": "非官方插件。检查现有连接与模型目录，合并本地及供应商模型，编辑参数；可确认后测试 Responses 直连。更新按钮打开排序弹框，可选预览或直接确认写入；备份原目录，独立查看最近写入记录并确认恢复。不修改连接配置，不做路由。",
+    "developerName": "codex-model-kit maintainers",
+    "category": "Developer Tools",
+    "capabilities": ["Interactive", "Read", "Write"],
+    "defaultPrompt": ["打开 Codex 模型工具的模型同步页面"],
+    "brandColor": "#397567",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg"
+  }
+}
