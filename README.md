@@ -62,3 +62,9 @@ npm run release:package
 [开发与发布检查清单](docs/development.md) · [CI 与正式发布](CI.md) · [Windows 支持边界](WINDOWS.md)
 
 `.claude-plugin/marketplace.json` 是当前 Codex 安装流程使用的兼容 marketplace 清单，不是闲置的 Claude 插件目录；构建、版本同步和安装校验均依赖它，不能直接删除。
+
+## 开源协议
+
+本项目采用 [MIT License](LICENSE)，允许使用、修改、分发和商业使用，须保留版权及许可声明；软件按原样提供，不提供担保。
+
+第三方依赖及参考数据仍遵循各自的许可证，相关声明保留在分发包的 `marketplace/plugins/codex-model-kit/THIRD_PARTY_LICENSES.txt` 中。新增许可证会随下一次新版本进入正式安装包，不替换已发布版本的附件。

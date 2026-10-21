@@ -101,6 +101,7 @@ test("built plugin preserves bilingual READMEs, split guides and screenshots", a
   ];
   for (const path of [
     ...documents,
+    "LICENSE",
     "CI.md",
     "docs/screenshots/model-list.png",
     "docs/screenshots/write-preview.png",
@@ -121,6 +122,37 @@ test("built plugin preserves bilingual READMEs, split guides and screenshots", a
       }
     }
   }
+});
+
+test("project MIT license is linked without replacing third-party notices", async () => {
+  const source = new URL("../", import.meta.url);
+  const license = await readFile(new URL("LICENSE", source), "utf8");
+  assert.match(license, /^MIT License\n/);
+  assert.match(license, /Copyright \(c\) 2026 buzulabee/);
+  assert.match(
+    license,
+    /The above copyright notice and this permission notice/,
+  );
+  assert.match(license, /THE SOFTWARE IS PROVIDED "AS IS"/);
+  for (const path of ["README.md", "README.en.md"]) {
+    const text = await readFile(new URL(path, source), "utf8");
+    assert.match(text, /\[MIT License\]\(LICENSE\)/);
+    assert.match(text, /THIRD_PARTY_LICENSES\.txt/);
+  }
+  const reference = await readFile(
+    new URL("src/catalog/REFERENCE_LICENSES.txt", source),
+    "utf8",
+  );
+  const bundled = await readFile(
+    new URL(
+      "dist/marketplace/plugins/codex-model-kit/THIRD_PARTY_LICENSES.txt",
+      source,
+    ),
+    "utf8",
+  );
+  assert.ok(bundled.includes(reference));
+  assert.match(bundled, /Copyright \(c\) 2025 Jason Young/);
+  assert.match(bundled, /Copyright \(c\) 2025 models\.dev/);
 });
 
 test("installer prefers the client runtime over the system runtime", () => {
