@@ -24,6 +24,7 @@ await cp(join(dist, "installer"), staging, { recursive: true });
 for (const path of [
   "README.md",
   "README.en.md",
+  "LICENSE",
   "ACCEPTANCE.md",
   "INSTALL.md",
   "CI.md",

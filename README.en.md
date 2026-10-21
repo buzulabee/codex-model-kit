@@ -62,3 +62,9 @@ npm run release:package
 [Development and Release Checklist (Chinese)](docs/development.md) · [CI and Publishing (Chinese)](CI.md) · [Windows Support Boundaries (Chinese)](WINDOWS.md)
 
 `.claude-plugin/marketplace.json` is the compatibility marketplace manifest used by the Codex installation flow, not an unused Claude plugin directory. Building, version synchronization, and installation checks depend on it.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE). Use, modification, distribution, and commercial use are permitted provided the copyright and permission notices are retained. The software is provided as is, without warranty.
+
+Third-party dependencies and reference data remain subject to their respective licenses. Their notices are retained in `marketplace/plugins/codex-model-kit/THIRD_PARTY_LICENSES.txt` in the distribution. The new project license will be included in the next versioned release package; existing release assets are not replaced.

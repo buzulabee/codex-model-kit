@@ -47,6 +47,7 @@ for (const path of [
   "assets",
   "README.md",
   "README.en.md",
+  "LICENSE",
   "INSTALL.md",
   "CI.md",
   "docs",
