@@ -153,6 +153,38 @@ test("idempotent start is single POST, new key cannot reuse consumed plan, model
     workbench.close();
   }
 });
+test("refresh attaches official Terra defaults without inference requests", async () => {
+  const requests: string[] = [];
+  const { workbench, ref } = await setup(async (_url, options) => {
+    requests.push(options!.method!);
+    return Response.json({ data: [{ id: "gpt-6.1-terra" }] });
+  });
+  try {
+    workbench.refreshModels(ref());
+    const ready = await wait(
+      workbench,
+      (s) => s.workbench!.catalog.status !== "loading",
+    );
+    snapshotSchema.parse(ready);
+    assert.equal(ready.workbench!.catalog.status, "ready");
+    const model = ready.workbench!.catalog.models.find(
+      (m) => m.id === "gpt-6.1-terra",
+    )!;
+    assert.deepEqual(model.referenceMetadata, {
+      source: "canonical-reference",
+      values: {
+        contextWindow: 1050000,
+        images: true,
+        reasoningLevels: ["none", "low", "medium", "high", "xhigh", "max"],
+      },
+    });
+    assert.equal(model.metadata, undefined);
+    assert.equal(model.result, null);
+    assert.deepEqual(requests, ["GET"]);
+  } finally {
+    workbench.close();
+  }
+});
 test("queued cancellation performs no POST; in-flight cancellation stops next models and preserves completed results", async () => {
   let posts = 0;
   const { workbench, ref } = await setup(async (_url, options) => {

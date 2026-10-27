@@ -1,6 +1,6 @@
 {
   "name": "codex-model-kit",
-  "version": "2026.1021.1007",
+  "version": "2026.1027.944",
   "description": "Codex 模型工具：同步中转站模型，预览并确认写入本地模型目录。",
   "author": {
     "name": "codex-model-kit maintainers"

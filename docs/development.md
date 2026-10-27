@@ -32,6 +32,8 @@ npm run format
 npm run check
 ```
 
+新模型的官方参数补充单独维护在 `src/catalog/official-reference-metadata.json`，记录精确模型 ID、官方来源 URL 和核实日期。只添加目录支持且已核实的字段，不将最大输出长度当作上下文；该文件不会被上述快照生成脚本覆盖。同地址预设优先于官方补充，官方补充优先于旧原厂快照；供应商声明和本地设置的优先级保持不变。
+
 ## 为什么保留 .claude-plugin
 
 当前 `.claude-plugin/marketplace.json` 是 Codex 使用的兼容 marketplace 清单，不表示本项目另有 Claude 插件功能：

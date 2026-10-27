@@ -1,4 +1,5 @@
 import data from "./reference-metadata.json" with { type: "json" };
+import official from "./official-reference-metadata.json" with { type: "json" };
 import { metadataSchema, type ModelMetadata } from "../shared/catalog.js";
 // Match the whole deployment path, never just the host or a parent path.
 // Only terminal API version / request suffixes are ignored, following CC Switch.
@@ -27,6 +28,8 @@ const validatedModels = (rows: object) =>
     ]),
   );
 const canonicalModels = validatedModels(data.canonical);
+// Keep reviewed official additions separate from the generated third-party snapshot.
+const officialModels = validatedModels(official.models);
 const byEndpoint = new Map<string, Array<Map<string, ModelMetadata>>>();
 for (const group of [...data.presets, ...data.providers]) {
   const models = validatedModels(group.models);
@@ -54,7 +57,10 @@ export function referenceMetadata(
       matched = true;
     }
   }
-  const canonical = canonicalModels.get(id);
+  const canonical = {
+    ...canonicalModels.get(id),
+    ...officialModels.get(id),
+  };
   values = { ...canonical, ...values };
   return Object.keys(values).length
     ? { values, source: matched ? "endpoint-preset" : "canonical-reference" }
