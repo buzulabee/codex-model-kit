@@ -7,7 +7,7 @@
     {
       "name": "codex-model-kit",
       "source": "./plugins/codex-model-kit",
-      "version": "2026.1021.1007",
+      "version": "2026.1027.944",
       "description": "Codex 模型工具 模型目录同步与确认写入"
     }
   ]

@@ -5,7 +5,7 @@ import { workbenchSchema } from "./workbench.js";
 import { connectionSummarySchema, discoverySummarySchema } from "./config.js";
 import { releaseTag } from "./release-version.js";
 
-export const VERSION = "2026.1021.1007";
+export const VERSION = "2026.1027.944";
 export const DISPLAY_VERSION = releaseTag(VERSION);
 export const UI_URI = `ui://codex-model-kit/main-catalog-sync-v${VERSION}.html`;
 export const SELF_TEST_TOKEN = "CMK-M0-FICTITIOUS-TOKEN-NOT-A-CREDENTIAL";

@@ -371,6 +371,82 @@ test("reference efforts use medium without replacing local defaults, including e
     assert.notEqual(result.reasoningLevels, local.reasoningLevels);
   }
 });
+test("Terra official fallback fills an ID-only relay response and produces a usable catalog", async () => {
+  const { referenceMetadata } = await import("../src/catalog/reference.js");
+  const remote = normalizeModels({ data: [{ id: "gpt-6.1-terra" }] }, secret)
+    .models[0]!;
+  remote.referenceMetadata = referenceMetadata(
+    "https://arbitrary-relay.invalid/v1",
+    remote.id,
+  );
+  const draft = initialParameters(remote.id, undefined, remote);
+  assert.deepEqual(draft.parameters, {
+    displayName: remote.id,
+    requestModel: remote.id,
+    contextWindow: 1050000,
+    images: true,
+    reasoningLevels: ["none", "low", "medium", "high", "xhigh", "max"],
+    defaultReasoning: "medium",
+  });
+  assert.equal(draft.source, "原厂参数参考（非中转站实测）");
+  assert.equal(remote.result, null);
+  const json = new CatalogStore().preview(
+    [{ key: remote.id, parameters: draft.parameters }],
+    new Set([remote.id]),
+    [],
+  );
+  const saved = JSON.parse(json).models[0];
+  assert.equal(saved.context_window, 1050000);
+  assert.equal(saved.max_context_window, 1050000);
+  assert.deepEqual(saved.input_modalities, ["text", "image"]);
+  assert.equal(saved.default_reasoning_level, "medium");
+  for (const id of ["gpt-6.1-terra-custom", "openai/gpt-6.1-terra"]) {
+    assert.equal(
+      referenceMetadata("https://arbitrary-relay.invalid/v1", id),
+      undefined,
+    );
+  }
+});
+test("Terra fallback respects partial supplier declarations and all local settings", async () => {
+  const { referenceMetadata } = await import("../src/catalog/reference.js");
+  for (const declaration of [
+    { context_window: 128000 },
+    { supports_images: false },
+    { supported_reasoning_levels: [] },
+  ]) {
+    const remote = normalizeModels(
+      { data: [{ id: "gpt-6.1-terra", ...declaration }] },
+      secret,
+    ).models[0]!;
+    remote.referenceMetadata = referenceMetadata(
+      "https://arbitrary-relay.invalid/v1",
+      remote.id,
+    );
+    const p = initialParameters(remote.id, undefined, remote).parameters;
+    assert.equal(p.contextWindow, declaration.context_window ?? 1050000);
+    assert.equal(p.images, declaration.supports_images ?? true);
+    assert.deepEqual(
+      p.reasoningLevels,
+      declaration.supported_reasoning_levels ?? [
+        "none",
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max",
+      ],
+    );
+    assert.equal(
+      p.defaultReasoning,
+      declaration.supported_reasoning_levels ? null : "medium",
+    );
+    const local = { ...params, contextWindow: null, images: null };
+    assert.deepEqual(
+      initialParameters(remote.id, local, remote).parameters,
+      local,
+    );
+  }
+});
 test("supplier default medium survives catalog preview serialization", () => {
   const remote = normalizeModels(
     {

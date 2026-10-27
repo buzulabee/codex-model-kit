@@ -1,0 +1,17 @@
+{
+  "sources": [
+    {
+      "model": "gpt-6.1-terra",
+      "url": "https://developers.openai.com/api/docs/models/gpt-6.1-terra",
+      "retrieved": "2026-10-27",
+      "note": "Official model specifications, not relay verification. 128000 is the maximum output length, not the context window. The documented default reasoning effort is medium."
+    }
+  ],
+  "models": {
+    "gpt-6.1-terra": {
+      "contextWindow": 1050000,
+      "images": true,
+      "reasoningLevels": ["none", "low", "medium", "high", "xhigh", "max"]
+    }
+  }
+}
